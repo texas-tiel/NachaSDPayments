@@ -1,10 +1,19 @@
-<div>
-	<h1>
-		<i class="fa fa-star-o" aria-hidden="true"></i>
-		Welcome user!
-	</h1>
-  	<p><button type="button" ng-click="myFunction()">Click to fetch a JSON!</button></p>
-	{{greeting}}
+<div class="centered">
+	<img src="images/capitalone_logo.png" alt="CapitalOne Logo" style="width:300px;margin-bottom:5px;">
+	<div class="centeredText">Same-Day Payments Portal</div>
+	<div ng-show="incorrectLogin" class="errorTextbox">
+		<i class="fa fa-exclamation-triangle" aria-hidden="true">
+			Error: Username or password is incorrect
+		</i>
+	</div>
+	<form name="loginForm" ng-submit="loginForm.$valid && validateUser()">
+		<input type="text" name="username" ng-model="user.name" placeholder="Username" class="customTextbox" required>
+	    <input type="password" name="password" ng-model="user.password" placeholder="Password" class="customTextbox" required>
+	    <input type="submit" id="submit" value="Submit" class="customButton"/>
+	</form>
+	
 	<br>
-	{{source}}
+	Username: user
+	<br>
+	Password: 123456
 </div>

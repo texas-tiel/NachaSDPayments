@@ -7,24 +7,19 @@
  * only. On the whole, injections are INCREDIBLY picky about syntax. You MUST declare your injections
  * in an array like this, with the last array element being the function, or you will run into errors.
  */
-app.controller('LoginCtrl', ['$scope', 'DatabaseService', function ($scope, DatabaseService) {
-
+app.controller('LoginCtrl', ['$scope', '$location', 'UserService', function ($scope, $location, UserService) {
+	$scope.user = {name: '', password: ''};
+	$scope.incorrectLogin = false;
+	
 	//myFunction() is called when the button is pressed via the ng-click class
-	$scope.myFunction = function(){
-		/*
-		 *The DatabaseService is an AngularJS service that makes http calls to the backend of the app.
-		 *It can be found within the "service.database.js" file in the project.
-		 *callBackend() is the specific function in the service I'm calling.
-		 *This is what's considered an AJAX call. The .success() after the function name means that
-		 *the service *promises* to return a value at *some* point in the future. Any Javascript
-		 *following the call will be run afterwards until it is interrupted by that returned value, 
-		 *which I'm calling result. At that point, the program jumps to the function contained within
-		 *.success() and executes it.
-		 */
-		DatabaseService.callBackend().success(function(result){
-			$scope.greeting = result.textA;
-			$scope.source = result.textB;
-		});
+	$scope.validateUser = function(){
+		$scope.incorrectLogin = false;
+		if($scope.user.name == "user" && $scope.user.password == "123456"){
+			UserService.setUsername($scope.user.name);
+			$location.path('/home');
+		}	
+		else
+			$scope.incorrectLogin = true;
 	};
 	
 }]);
