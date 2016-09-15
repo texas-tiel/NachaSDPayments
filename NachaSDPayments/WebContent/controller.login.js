@@ -11,12 +11,13 @@ app.controller('LoginCtrl', ['$scope', '$location', 'UserService', function ($sc
 	$scope.user = {name: '', password: ''};
 	$scope.incorrectLogin = false;
 	
-	//myFunction() is called when the button is pressed via the ng-click class
+	//Compares values in the textboxes to the accepted username/password combo, then redirects
+	//the user to the homepage if they are valid.
 	$scope.validateUser = function(){
 		$scope.incorrectLogin = false;
 		if($scope.user.name == "user" && $scope.user.password == "123456"){
 			UserService.setUsername($scope.user.name);
-			$location.path('/home');
+			$location.path('/home'); //route to the home page
 		}	
 		else
 			$scope.incorrectLogin = true;

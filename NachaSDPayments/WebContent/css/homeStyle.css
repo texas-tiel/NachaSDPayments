@@ -1,0 +1,74 @@
+.loadingCentered{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  z-index: 15;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  text-align: center;
+}
+
+.gridCell{
+	height: 30px;
+	width: 200px;
+	display: inline-block;
+	line-height: 30px;
+	vertical-align: middle;
+}
+
+.pageHeader{
+	height: 80px;
+	width: 100%;
+	position:relative;
+}
+
+.pageHeader img{
+	position:absolute;
+    top:0;
+    bottom:0;
+    padding-left:15px;
+    margin:auto;
+}
+
+.pageHeader button{
+	position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: auto;
+ 	border: 0;
+ 	box-shadow: none;
+ 	background-color: Transparent;
+ 	color: #004879;
+ 	font-size: 12pt;
+ 	cursor: pointer;
+}
+
+.pageHeader button:focus{
+	outline: none;
+	color: #D12E33;
+}
+
+.secondaryHeader{
+	height: 40px;
+	width: 100%;
+	background-color: #004879;
+	color: white;
+	font-size:18px;
+	line-height: 40px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.transactionButton{
+	width: 150px;
+	height: 30px;
+ 	border: 0;
+ 	box-shadow:none;
+ 	border-radius: 5px;
+ 	background-color: #004879;
+ 	color: white;
+}

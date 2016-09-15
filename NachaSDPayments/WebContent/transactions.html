@@ -1,3 +1,31 @@
-<div>
-	Welcome {{user}} to the transactions page!
+<div ng-show="loading" class="loadingCentered">
+	<i class="fa fa-spinner fa-spin fa-3x co-blue" aria-hidden="true"></i>
+</div>
+<div ng-show="!loading">
+	<div class="pageHeader">
+		<img src="images/capitalone_logo.png" alt="CapitalOne Logo" style="height:50px">
+		<button ng-click="logout()">
+			<i class="fa fa-sign-out" aria-hidden="true"></i>
+			Logout
+		</button>
+	</div>
+	<div class="secondaryHeader">
+		&nbsp;&nbsp;&nbsp;Transaction History
+	</div>
+	<br><br><br>
+	<div>
+		<div class="gridCell bold">Account Number</div>
+		<div class="gridCell bold">Date</div>
+		<div class="gridCell bold">Amount</div>
+		<div ng-repeat="t in transactions">
+			<div class="gridCell">{{t.account}}</div>
+			<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div> <!--The stuff after the | is an Angular filter. Go look it up.-->
+			<div class="gridCell">{{t.amount | currency:"$"}}</div>
+		</div>
+		<br>
+		<button class="transactionButton">
+			<i class="fa fa-plus" aria-hidden="true"></i>
+			New transaction
+		</button>
+	</div>
 </div>
