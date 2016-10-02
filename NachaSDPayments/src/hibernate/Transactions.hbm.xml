@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 2, 2016 8:58:28 AM by Hibernate Tools 5.2.0.Beta1 -->
+<hibernate-mapping>
+    <class name="hibernate.Transactions" table="transactions" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="date" type="string">
+            <column name="date" length="50" />
+        </property>
+        <property name="amount" type="java.lang.Double">
+            <column name="amount" precision="17" scale="17" />
+        </property>
+    </class>
+</hibernate-mapping>
