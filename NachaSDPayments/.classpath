@@ -96,5 +96,8 @@
 	<classpathentry kind="lib" path="C:/Users/dxz13/Documents/NachaSDPayments/NachaSDPayments/lib/optional/infinispan/jgroups-3.6.7.Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dxz13/Documents/NachaSDPayments/NachaSDPayments/lib/optional/proxool/hibernate-proxool-5.2.2.Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dxz13/Documents/NachaSDPayments/NachaSDPayments/lib/optional/proxool/proxool-0.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dxz13/Documents/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dxz13/Downloads/postgresql-9.4.1211.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dxz13/Downloads/slf4j-simple-1.6.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
