@@ -23,6 +23,10 @@
 	position:relative;
 }
 
+.large{
+	font-size: 22 pt;
+}
+
 .pageHeader img{
 	position:absolute;
     top:0;

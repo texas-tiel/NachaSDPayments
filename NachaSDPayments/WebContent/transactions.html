@@ -13,18 +13,6 @@
 		&nbsp;&nbsp;&nbsp;Transaction History
 	</div>
 	<br><br><br>
-	<div>
-		<div class="gridCell bold">Account Number</div>
-		<div class="gridCell bold">Date</div>
-		<div class="gridCell bold">Amount</div>
-		<div class="gridCell bold">Status</div>
-		<div ng-repeat="t in transactions">
-			<div class="gridCell">{{t.account}}</div>
-			<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div> <!--The stuff after the | is an Angular filter. Go look it up.-->
-			<div class="gridCell">{{t.amount | currency:"$"}}</div>
-			<div class="gridCell">{{t.status}}</div>
-		</div>
-		<br>
 		<button class="transactionButton">
 			<i class="fa fa-plus" aria-hidden="true"></i>
 			New transaction
@@ -33,5 +21,33 @@
 			<i class="fa fa-refresh" aria-hidden="true"></i>
 			Refresh list
 		</button>
+	<br>
+	<div>
+		<br><br>
+		<div class="large bold">Pending Transactions:</div>
+		<br>
+		<div class="gridCell bold">Account Number</div>
+		<div class="gridCell bold">Date</div>
+		<div class="gridCell bold">Amount</div>
+		<div class="gridCell bold">Status</div>
+		<div ng-repeat="t in pendingTrans">
+			<div class="gridCell">{{t.account}}</div>
+			<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div> <!--The stuff after the | is an Angular filter. Go look it up.-->
+			<div class="gridCell">{{t.amount | currency:"$"}}</div>
+			<div class="gridCell">{{t.status}}</div>
+		</div>
+		<br><br>
+		<div class="large bold">Completed Transactions:</div>
+		<br>
+		<div class="gridCell bold">Account Number</div>
+		<div class="gridCell bold">Date</div>
+		<div class="gridCell bold">Amount</div>
+		<div class="gridCell bold">Status</div>
+		<div ng-repeat="t in completedTrans">
+			<div class="gridCell">{{t.account}}</div>
+			<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div> <!--The stuff after the | is an Angular filter. Go look it up.-->
+			<div class="gridCell">{{t.amount | currency:"$"}}</div>
+			<div class="gridCell">{{t.status}}</div>
+		</div>
 	</div>
 </div>

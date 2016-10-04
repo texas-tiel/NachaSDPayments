@@ -30,7 +30,7 @@ public class DatabaseController {
 	    
 	    try{
 	    	tx = session.beginTransaction();
-	    	String query = "FROM rest.Transactions";
+	    	String query = "FROM rest.Transactions order by date desc";
 	        List trans = session.createQuery(query).list(); 
 	        
 	        for (Iterator iterator1 = trans.iterator(); iterator1.hasNext();){
