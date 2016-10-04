@@ -32,9 +32,9 @@ public class PostgreSQLConnectionTest {
 		System.out.println("Opened Database Successfully \n");
 
 		
-		/*Creating table - > 
+		//Creating table - > 
 		
-		stmt = c.createStatement();
+		/*stmt = c.createStatement();
 		String sql = "CREATE TABLE TRANSACTION " +
                 "(ID INT PRIMARY KEY     NOT NULL," +
                 " DATE        CHAR(50), " +
@@ -42,8 +42,7 @@ public class PostgreSQLConnectionTest {
 
 		 stmt.executeUpdate(sql);
          stmt.close();
-         c.close();
- */
+         c.close();*/
 		}
 		
 		catch (Exception e) 
