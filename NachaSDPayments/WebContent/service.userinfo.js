@@ -5,7 +5,11 @@
  */
 app.service('UserService', [function () {
 	var username;
+	var userID;
 	
 	this.getUsername = function(){ return username; }
 	this.setUsername = function(u){ username = u; }
+	
+	this.getUserId = function(){ return userID; }
+	this.setUserId = function(i){ userID = i; }
 }]);

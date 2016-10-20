@@ -7,20 +7,24 @@
  * only. On the whole, injections are INCREDIBLY picky about syntax. You MUST declare your injections
  * in an array like this, with the last array element being the function, or you will run into errors.
  */
-app.controller('LoginCtrl', ['$scope', '$location', 'UserService', function ($scope, $location, UserService) {
-	$scope.user = {name: '', password: ''};
+app.controller('LoginCtrl', ['$scope', '$location', 'DatabaseService', 'UserService', function ($scope, $location, DatabaseService, UserService) {
+	$scope.user = {username: '', password: ''};
 	$scope.incorrectLogin = false;
 	
 	//Compares values in the textboxes to the accepted username/password combo, then redirects
 	//the user to the homepage if they are valid.
 	$scope.validateUser = function(){
 		$scope.incorrectLogin = false;
-		if($scope.user.name == "user" && $scope.user.password == "123456"){
-			UserService.setUsername($scope.user.name);
-			$location.path('/home'); //route to the home page
-		}	
-		else
-			$scope.incorrectLogin = true;
+		
+		DatabaseService.verifyLogin($scope.user).success(function(id){
+			if(id > 0){
+				UserService.setUsername($scope.user.username);
+				UserService.setUserId(id);
+				$location.path('/home'); //route to the home page
+			}
+			else
+				$scope.incorrectLogin = true;
+		});
 	};
 	
 }]);

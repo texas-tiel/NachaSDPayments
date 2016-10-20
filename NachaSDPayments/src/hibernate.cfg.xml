@@ -9,5 +9,6 @@
   <property name="hibernate.connection.username">postgres</property>
   <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
   <mapping class="hibernate.Transactions" package="hibernate" resource="rest/Transactions.hbm.xml"/>
+  <mapping class="hibernate.User" package="hibernate" resource="rest/User.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>

@@ -2,7 +2,7 @@ package rest;
 
 import java.sql.Date;
 
-public class FormInfo implements java.io.Serializable{
+public class FormInfoDTO implements java.io.Serializable{
 
 	private String account;
 	private Date date;
