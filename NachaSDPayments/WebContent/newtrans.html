@@ -1,0 +1,46 @@
+	<div class="pageHeader">
+		<img src="images/capitalone_logo.png" alt="CapitalOne Logo" style="height:50px">
+		<button ng-click="logout()">
+			<i class="fa fa-sign-out" aria-hidden="true"></i>
+			Logout
+		</button>
+	</div>
+	<div class="secondaryHeader">
+		&nbsp;&nbsp;&nbsp;New Transaction
+	</div>
+	<br><br><br>
+	
+	<button class="transactionButton" ng-click="cancelTrans()">
+		<i class="fa fa-arrow-left" aria-hidden="true"></i>
+		Cancel
+	</button>
+	<br><br>
+	
+	<form name="transForm" ng-submit="transForm.$valid && validateForm()">
+		<div class="inputContainer" style="width:400px">
+			<i class="fa fa-university inputIcon" aria-hidden="true"></i>
+			<select class="customTextbox" ng-model="transInfo.account" required>
+				<option value="" disabled selected hidden>Account</option>
+				<option value="option-1">Option 1</option>
+	      		<option value="option-2">Option 2</option>
+			</select>
+		</div>
+		<div class="inputContainer" style="width:250px">
+			<i class="fa fa-calendar inputIcon" aria-hidden="true"></i>
+			<input type="date" name="date" ng-model="transInfo.date" class="customTextbox" style="text-indent:15px" required>
+		</div>
+		<div class="inputContainer" style="width:250px">
+			<i class="fa fa-money inputIcon" aria-hidden="true"></i>
+			<select class="customTextbox" ng-model="paymentType" ng-change="setAmount()" required>
+				<option value="1">Payment Due</option>
+	      		<option value="2">Principal Payment</option>
+			</select>
+		</div>
+		<div class="inputContainer" ng-show="paymentType != 0" style="width:250px">
+			<i class="fa fa-dollar inputIcon" aria-hidden="true"></i>
+			<input type="number" step="0.01" min="0" max="10000" ng-model="transInfo.amount" ng-disabled="paymentType==1" class="customTextbox" required>
+		</div>
+	    <input type="submit" id="submit" value="Submit" class="loginButton"/>
+	</form>
+	
+	

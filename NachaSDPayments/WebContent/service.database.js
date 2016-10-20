@@ -15,6 +15,10 @@ app.service('DatabaseService', ['$http', '$location', function ($http, $location
 	    return $http.post(baseUrl + "api/data/history");
 	};
 	
+	this.sendForm = function(form){
+		return $http.post(baseUrl + "api/data/newtran", form);
+	};
+	
 	function getBase(url){
 		var index = url.indexOf("#");
 		return url.substring(0, index);

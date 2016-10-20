@@ -9,5 +9,6 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	$routeProvider
 		.when("/", {templateUrl: "login.html", controller: "LoginCtrl"})
 		.when("/home", {templateUrl: "transactions.html", controller: "HomeCtrl"})
+		.when("/home/new_transaction", {templateUrl: "newtrans.html", controller: "TransFormCtrl"})
 		.otherwise({ redirectTo: "/"});
 }]);

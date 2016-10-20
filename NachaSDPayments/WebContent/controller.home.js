@@ -1,9 +1,10 @@
 /*
- * Controller for the completedTrans (home) page of the app.
+ * Controller for the transactions (home) page of the app.
  */
 app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserService', function ($scope, $location, DatabaseService, UserService) {
 	var redirect = checkUser();
 	$scope.loading = true;
+	$scope.databaseFailure = false;
 	$scope.user;
 	$scope.completedTrans = [];
 	$scope.pendingTrans = [];
@@ -16,7 +17,8 @@ app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserServi
 			DatabaseService.getTransactions().success(function(result){
 				$scope.loading = false;
 				sortTransaction(result);
-
+			}).error(function(){
+				$scope.databaseFailure = true;
 			});
 		}
 	};
@@ -25,10 +27,12 @@ app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserServi
 		$scope.completedTrans = [];
 		$scope.pendingTrans = [];
 		$scope.loading = true;
+		$scope.databaseFailure = false;
 		DatabaseService.getTransactions().success(function(result){
 			$scope.loading = false;
 			sortTransaction(result);
-			
+		}).error(function(){
+			$scope.databaseFailure = true;
 		});
 	};
 	
@@ -42,6 +46,10 @@ app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserServi
 			}
 		}
 	};
+	
+	$scope.hasElements = function(list){ return list.length > 0; };
+	
+	$scope.startNewTrans = function(){ $location.path('/home/new_transaction'); }
 	
 	$scope.logout = function(){
 		UserService.setUsername(null);

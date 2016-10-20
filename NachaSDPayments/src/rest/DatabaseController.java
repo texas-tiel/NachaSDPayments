@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,5 +48,17 @@ public class DatabaseController {
 	    }
 	    
     	return history;
+    }
+    
+    @POST //specifies which type of HTTP call the method accepts (get, post, put, delete)
+    @Path("/newtran") //declares the routing information for the HTTP call to this method
+    @Consumes(MediaType.APPLICATION_JSON) //declares the format of the data it receives as a parameter
+    @Produces(MediaType.APPLICATION_JSON) //declares the format of the returned data, in this case a JSON Object
+    public boolean processNewTransaction(FormInfo form) {
+    	System.out.println(form.getAccount());
+    	
+    	//Processing for NACHA file
+    	
+    	return true;
     }
 }
