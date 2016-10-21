@@ -10,18 +10,21 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 		date: today,
 		amount: 0.00
 	};
-
+	
+	//Reroutes user if they're not logged in
 	function checkUser(){
 		if(UserService.getUsername() == null)
 			$location.path('/');
 	};
 	
+	//Gets today's date
 	function getCurrDate() {
 	    var local = new Date();
 	    local.setMinutes(0);
 	    return local;
 	};
 	
+	//Sets the amount in the final box when payment type is selected in the dropdown
 	$scope.setAmount = function(){
 		if($scope.paymentType == 1){
 			var temp = (Math.random().toFixed(3)*1000);// + Math.random().toFixed(2);
@@ -31,17 +34,21 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 			$scope.transInfo.amount = 0.00;	
 	};
 	
+	//Called when the "submit" button is pressed
 	$scope.validateForm = function(){
 		alert("Form submitted.");
 		DatabaseService.sendForm($scope.transInfo).success(function(result){
 			alert("Sent successfully.");
+			$location.path('/home');
 		}).error(function(){
 			alert("There was an error sending the form.");
 		});
 	};
 	
+	//Called when the "cancel" button is pressed
 	$scope.cancelTrans = function(){ $location.path('/home'); }
 	
+	//Logs user out
 	$scope.logout = function(){
 		UserService.setUsername(null);
 		$location.path('/');

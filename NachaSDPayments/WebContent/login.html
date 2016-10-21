@@ -1,11 +1,22 @@
 <div class="loginCentered">
 	<img src="images/capitalone_logo.png" alt="CapitalOne Logo" style="width:300px;margin-bottom:5px;">
 	<div class="centeredText">Same-Day Payments Portal</div>
+	
+	<!-- Invalid username/password error -->
 	<div ng-show="incorrectLogin" class="errorTextbox">
 		<i class="fa fa-exclamation-triangle" aria-hidden="true">
 			Error: Username or password is incorrect
 		</i>
 	</div>
+	
+	<!-- Server error -->
+	<div ng-show="serverError" class="errorTextbox">
+		<i class="fa fa-exclamation-triangle" aria-hidden="true">
+			Error: Could not connect to server
+		</i>
+	</div>
+	
+	<!-- Input form -->
 	<form name="loginForm" ng-submit="loginForm.$valid && validateUser()">
 		<div class="inputContainer">
 			<i class="fa fa-user inputIcon" aria-hidden="true"></i>
@@ -17,9 +28,4 @@
 	    </div>
 	    <input type="submit" id="submit" value="Login" class="loginButton"/>
 	</form>
-	
-	<br>
-	Username: user
-	<br>
-	Password: 123456
 </div>

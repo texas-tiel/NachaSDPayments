@@ -1,7 +1,7 @@
 /*
  * Controller for the transactions (home) page of the app.
  */
-app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserService', function ($scope, $location, DatabaseService, UserService) {
+app.controller('HomeCtrl', ['$scope', '$location', '$interval', 'DatabaseService', 'UserService', function ($scope, $location, $interval, DatabaseService, UserService) {
 	var redirect = checkUser();
 	$scope.loading = true;
 	$scope.databaseFailure = false;
@@ -9,34 +9,38 @@ app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserServi
 	$scope.completedTrans = [];
 	$scope.pendingTrans = [];
 	
+	//Called whenever the page is loaded
+	//If there's no user loaded into the UserService module, then redirect to the login screen
+	//If there is a user, pull their transaction information via AJAX call
 	function checkUser(){
 		if(UserService.getUsername() == null)
 			$location.path('/');
 		else{
 			$scope.user = UserService.getUsername();
-			DatabaseService.getTransactions().success(function(result){
-				$scope.loading = false;
-				sortTransaction(result);
-			}).error(function(){
-				$scope.databaseFailure = true;
-			});
+			fetchUserData();
 		}
 	};
 	
-	$scope.fetchUserData = function(){
+	//Makes AJAX call to the backend to fetch user's transaction data
+	function fetchUserData(){
 		$scope.completedTrans = [];
 		$scope.pendingTrans = [];
 		$scope.loading = true;
 		$scope.databaseFailure = false;
+		
+		//AJAX call
 		DatabaseService.getTransactions().success(function(result){
+			sortTransactions(result);
 			$scope.loading = false;
-			sortTransaction(result);
 		}).error(function(){
 			$scope.databaseFailure = true;
 		});
 	};
 	
-	function sortTransaction(list){
+	$interval(fetchUserData, 300000);
+	
+	//Sorts the passed list of transactions into 'pending' and 'success/fail' lists
+	function sortTransactions(list){
 		for(var i = 0; i < list.length; i++){
 			var temp = list[i];
 			if(temp.status != 'Pending'){
@@ -47,10 +51,13 @@ app.controller('HomeCtrl', ['$scope', '$location', 'DatabaseService', 'UserServi
 		}
 	};
 	
+	//Returns true if a list's length is longer than 0
 	$scope.hasElements = function(list){ return list.length > 0; };
 	
+	//Redirects to the new transactions form
 	$scope.startNewTrans = function(){ $location.path('/home/new_transaction'); }
 	
+	//Logs user out
 	$scope.logout = function(){
 		UserService.setUsername(null);
 		$location.path('/');

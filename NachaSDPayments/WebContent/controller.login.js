@@ -10,13 +10,17 @@
 app.controller('LoginCtrl', ['$scope', '$location', 'DatabaseService', 'UserService', function ($scope, $location, DatabaseService, UserService) {
 	$scope.user = {username: '', password: ''};
 	$scope.incorrectLogin = false;
+	$scope.serverError = false;
 	
 	//Compares values in the textboxes to the accepted username/password combo, then redirects
 	//the user to the homepage if they are valid.
 	$scope.validateUser = function(){
 		$scope.incorrectLogin = false;
+		$scope.serverError = false;
 		
+		//AJAX call
 		DatabaseService.verifyLogin($scope.user).success(function(id){
+			//If userID was returned
 			if(id > 0){
 				UserService.setUsername($scope.user.username);
 				UserService.setUserId(id);
@@ -24,6 +28,8 @@ app.controller('LoginCtrl', ['$scope', '$location', 'DatabaseService', 'UserServ
 			}
 			else
 				$scope.incorrectLogin = true;
+		}).error(function(){
+			$scope.serverError = true;
 		});
 	};
 	
