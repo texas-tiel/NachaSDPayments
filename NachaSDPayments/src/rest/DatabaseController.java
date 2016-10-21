@@ -1,5 +1,8 @@
 package rest;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -84,11 +87,29 @@ public class DatabaseController {
     @Path("/newtran") //declares the routing information for the HTTP call to this method
     @Consumes(MediaType.APPLICATION_JSON) //declares the format of the data it receives as a parameter
     @Produces(MediaType.APPLICATION_JSON) //declares the format of the returned data, in this case a JSON Object
-    public boolean processNewTransaction(FormInfoDTO form) {
-    	System.out.println(form.getAccount());
-    	
+    public boolean processNewTransaction(FormInfoDTO form) throws FileNotFoundException, UnsupportedEncodingException {
     	//Processing for NACHA file
+    	String fileOutput = null;
     	
+    	fileOutput = 
+    	  "6" 							//Record Type Code
+    	+ "__"							//Transaction Code
+    	+ "________"					//Receiving DFI Identification
+    	+ "_"							//Check Digit
+    	+ form.getAccount()				//DFI Account Number, 17 digits, left justify
+    	+ "00000000" + "00"				//Amount, in dollars and cents
+    	+ "_______________"				//Individual Identification Number
+    	+ "___________" + "___________"	//Name, last, first, left justify
+    	+ "__"							//Discretionary Data
+    	+ "_"							//Addenda Record Indicator
+    	+ "_______________"				//Trace Number
+    	;
+    	
+    	PrintWriter writer = new PrintWriter("output.txt", "UTF-8");	//open writer
+    	writer.println(fileOutput);										//write to file
+    	writer.close();													//close writer
+    	
+    	//System.out.println(form.getAccount());
     	return true;
     }
 }
