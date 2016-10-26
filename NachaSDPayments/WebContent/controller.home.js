@@ -29,7 +29,7 @@ app.controller('HomeCtrl', ['$scope', '$location', '$interval', 'DatabaseService
 		$scope.databaseFailure = false;
 		
 		//AJAX call
-		DatabaseService.getTransactions().success(function(result){
+		DatabaseService.getTransactions(UserService.getUserId()).success(function(result){
 			sortTransactions(result);
 			$scope.loading = false;
 		}).error(function(){

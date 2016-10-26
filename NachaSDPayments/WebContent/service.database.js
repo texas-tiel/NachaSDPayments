@@ -10,12 +10,15 @@ app.service('DatabaseService', ['$http', '$location', function ($http, $location
 	//Checks username/password to see if they are a valid login combo in the database
 	this.verifyLogin = function(info){
 		return $http.post(baseUrl + "api/data/user", info);
-	}
+	};
 	
-	//Fetches all transactions currently stored in the database
-	//NEEDS TO BE UPDATED TO FILTER BY USER
-	this.getTransactions = function(){
-	    return $http.post(baseUrl + "api/data/history");
+	//Fetches all transactions currently stored in the database for a specific user
+	this.getTransactions = function(id){
+	    return $http.post(baseUrl + "api/data/history", id);
+	};
+	
+	this.getAccounts = function(id){
+		return $http.post(baseUrl + "api/data/accountinfo", id);
 	};
 	
 	//Processes new transaction form information into a NACHA file

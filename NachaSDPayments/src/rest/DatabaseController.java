@@ -14,9 +14,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.transform.Transformers;
 
 @Path("/data") //specifies the routing information for the HTTP calls to this class
 public class DatabaseController {
@@ -54,23 +57,21 @@ public class DatabaseController {
 	    return id;
 	}
 	
-    @POST //specifies which type of HTTP call the method accepts (get, post, put, delete)
-    @Path("/history") //declares the routing information for the HTTP call to this method
-    @Produces(MediaType.APPLICATION_JSON) //declares the format of the returned data, in this case a JSON Object
-    public ArrayList<Transactions> getTransactionHistory() {
+    @POST
+    @Path("/history")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Transactions> getTransactionHistory(int id) {
     	Session session = HibernateUtil.getSessionFactory().openSession();
 	    Transaction tx = null;
-	    ArrayList<Transactions> history = new ArrayList<Transactions>();
-	    
+	    List<Transactions> history = new ArrayList<Transactions>();
 	    try{
 	    	tx = session.beginTransaction();
-	    	String query = "FROM rest.Transactions order by date desc";
-	        List trans = session.createQuery(query).list(); 
-	        
-	        for (Iterator iterator1 = trans.iterator(); iterator1.hasNext();){
-	           Transactions temp = (Transactions) iterator1.next();
-	           history.add(temp);
-	        }
+	        String sql = "SELECT * FROM Transactions t where account IN (SELECT account_num from Account WHERE user_id = " + id + ") ORDER BY t.date desc;";
+	        SQLQuery query = session.createSQLQuery(sql);
+	        query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+
+	        history = query.list();
 	        
 	        tx.commit();
 	    }catch (HibernateException e) {
@@ -81,6 +82,34 @@ public class DatabaseController {
 	    }
 	    
     	return history;
+    }
+    
+    @POST
+    @Path("/accountinfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BankAccountDTO> getBankAccounts(int id){
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+	    Transaction tx = null;
+	    List<BankAccountDTO> accounts = new ArrayList<BankAccountDTO>();
+	    
+	    try{
+	    	tx = session.beginTransaction();
+	        String sql = "SELECT a.id, a.account_num as account, b.bank_name as bankname FROM Account a INNER JOIN Bank b ON a.bank_num = b.id WHERE a.user_id = " + id + ";";
+	        SQLQuery query = session.createSQLQuery(sql);
+	        query.setResultTransformer(Transformers.aliasToBean(BankAccountDTO.class));
+
+	        accounts = query.list();
+	        
+	        tx.commit();
+	    }catch (HibernateException e) {
+	        if (tx!=null) tx.rollback();
+	        e.printStackTrace(); 
+	    }finally {
+	        session.close(); 
+	    }
+	    
+    	return accounts;
     }
     
     @POST //specifies which type of HTTP call the method accepts (get, post, put, delete)

@@ -5,6 +5,7 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	var redirect = checkUser();
 	var today = getCurrDate();
 	$scope.paymentType = 0;
+	$scope.accounts = [];
 	
 	$scope.transInfo = {
 		date: today,
@@ -15,6 +16,10 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	function checkUser(){
 		if(UserService.getUsername() == null)
 			$location.path('/');
+		else
+			DatabaseService.getAccounts(UserService.getUserId()).success(function(result){
+				$scope.accounts = result;
+			});
 	};
 	
 	//Gets today's date

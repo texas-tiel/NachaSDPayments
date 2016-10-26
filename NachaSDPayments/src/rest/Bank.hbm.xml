@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="rest.Bank" table="bank" schema="public" optimistic-lock="version">
+        <id name="id" type="int" >
+        	<column name="id" />
+			<generator class="increment"/>
+		</id>
+        <property name="bankName" type="string">
+            <column name="bank_name" length="25" />
+        </property>
+    </class>
+</hibernate-mapping>

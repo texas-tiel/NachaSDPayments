@@ -8,10 +8,10 @@
         	<column name="id" />
 			<generator class="increment"/>
 		</id>
-        <property name="account" type="int">
-            <column name="account" />
+        <property name="account" type="string">
+            <column name="account" length="17"/>
         </property>
-        <property name="date" type="string">
+        <property name="date" type="java.sql.Date">
             <column name="date" length="50" />
         </property>
         <property name="amount" type="java.lang.Double">
