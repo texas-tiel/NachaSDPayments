@@ -118,15 +118,44 @@ public class DatabaseController {
     @Produces(MediaType.APPLICATION_JSON) //declares the format of the returned data, in this case a JSON Object
     public boolean processNewTransaction(FormInfoDTO form) throws FileNotFoundException, UnsupportedEncodingException {
     	//Processing for NACHA file
-    	String fileOutput = null;
+    	
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+	    Transaction tx = null;
+	    try{
+	    	tx = session.beginTransaction();
+	        String sql = "INSERT INTO TRANSACTIONS (DATE,AMOUNT,STATUS, ACCOUNT) VALUES ('"+ form.getDate() +"', "+form.getAmount()+", 'Pending', '"+form.getAccount()+"');";
+	        /*SQLQuery query = */
+	        session.createSQLQuery(sql)
+	        	.executeUpdate();
+	        //query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+	        
+	        tx.commit();
+	    }catch (HibernateException e) {
+	        if (tx!=null) tx.rollback();
+	        e.printStackTrace(); 
+	    }finally {
+	        session.close(); 
+	    }
+    	/*String fileOutput = null;
+    	String account = form.getAccount();
+    	String amount = String.format ("%d", form.getAmount()*100);
+    	
+    	int length = 17-account.length();
+    	for(int i=0;i<length;i++){
+    		account += "_";
+    	}
+    	length = 10-amount.length();
+    	for(int i=0;i<length;i++){
+    		amount = "_" + amount;
+    	}
     	
     	fileOutput = 
     	  "6" 							//Record Type Code
     	+ "__"							//Transaction Code
     	+ "________"					//Receiving DFI Identification
     	+ "_"							//Check Digit
-    	+ form.getAccount()				//DFI Account Number, 17 digits, left justify
-    	+ "00000000" + "00"				//Amount, in dollars and cents
+    	+ account						//DFI Account Number, 17 digits, left justify
+    	+ amount						//Amount, in dollars and cents  "00000000" + "00"
     	+ "_______________"				//Individual Identification Number
     	+ "___________" + "___________"	//Name, last, first, left justify
     	+ "__"							//Discretionary Data
@@ -136,7 +165,7 @@ public class DatabaseController {
     	
     	PrintWriter writer = new PrintWriter("output.txt", "UTF-8");	//open writer
     	writer.println(fileOutput);										//write to file
-    	writer.close();													//close writer
+    	writer.close();	*/											//close writer
     	
     	//System.out.println(form.getAccount());
     	return true;

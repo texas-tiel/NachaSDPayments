@@ -2,13 +2,21 @@ package rest;
 
 import java.sql.Date;
 
-public class Transactions implements java.io.Serializable {
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+import org.hibernate.annotations.Entity;
+
+@Entity
+public class Transactions implements java.io.Serializable {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String account;
 	private Date date;
 	private Double amount;
 	private String status;
+	
 	
 	public int getId() { return this.id; }
 	public void setId(int id) { this.id = id; }
