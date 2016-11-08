@@ -35,7 +35,7 @@ public class DatabaseController {
 	    
 	    try{
 	    	tx = session.beginTransaction();
-	    	String query = "FROM rest.User WHERE username='"+user.getUsername()+"' AND password='"+user.getPassword()+"'";
+	    	String query = "FROM rest.User WHERE username='"+user.getUsername()+"' AND password= crypt('" + user.getPassword() + "', password);";
 	        List trans = session.createQuery(query).list(); 
 	        User temp = null;
 	        
