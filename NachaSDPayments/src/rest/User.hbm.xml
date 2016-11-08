@@ -12,7 +12,7 @@
             <column name="username" length="20"/>
         </property>
         <property name="password" type="string">
-            <column name="password" length="16"/>
+            <column name="password" length="34"/>
         </property>
         <property name="ssn" type="string">
             <column name="ssn" length="9" />
