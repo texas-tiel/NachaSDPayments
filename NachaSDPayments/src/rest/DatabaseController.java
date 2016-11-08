@@ -170,4 +170,28 @@ public class DatabaseController {
     	//System.out.println(form.getAccount());
     	return true;
     }
+
+    @POST
+    @Path("/newtran")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean addUser(User u) throws FileNotFoundException, UnsupportedEncodingException {
+    {
+	Session session = HibernateUtil.getSessionFactory().openSession();
+	    Transaction tx = null;
+	    try{
+	        tx = session.beginTransaction();
+	        String sql = "INSERT INTO user(USERNAME, PASSWORD, SSN) VALUES ('" + u.getUsername() + "', crypt('" + u.getPassword() + "', gen_salt('md5')), '" + u.getSsn() + "');";
+		session.createSQLQuery(sql)
+		    .executeUpdate();
+		tx.commit();
+	    }catch (HibernateException e) {
+	        if (tx!=null) tx.rollback();
+	        e.printStackTrace(); 
+	    }finally {
+	        session.close();
+	    	}
+	return true;
+    }
+	
 }
