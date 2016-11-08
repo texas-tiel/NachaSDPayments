@@ -1,7 +1,14 @@
 package rest;
 
-public class User implements java.io.Serializable {
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+import org.hibernate.annotations.Entity;
+
+@Entity
+public class User implements java.io.Serializable {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String username;
 	private String password;
