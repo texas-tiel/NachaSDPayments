@@ -42,6 +42,7 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	//Called when the "submit" button is pressed
 	$scope.validateForm = function(){
 		alert("Form submitted.");
+		$scope.transInfo.id = UserService.getUserId();
 		DatabaseService.sendForm($scope.transInfo).success(function(result){
 			alert("Sent successfully.");
 			$location.path('/home');

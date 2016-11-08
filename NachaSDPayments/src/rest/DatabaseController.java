@@ -1,8 +1,12 @@
 package rest;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -85,6 +89,78 @@ public class DatabaseController {
     }
     
     @POST
+    @Path("/pending")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Transactions> updatePending(int id) {
+    	
+    	//CODE GOES HERE
+    	String fileName = "receipt.txt";
+    	
+    	String fileInput = null;
+	    
+    	try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = 
+                new FileReader(fileName);
+
+            BufferedReader bufferedReader = 
+                new BufferedReader(fileReader);
+
+            while((fileInput = bufferedReader.readLine()) != null) {
+            	int updateId = Integer.parseInt(fileInput.substring(0,15));
+            	int updateCode = Integer.parseInt(fileInput.substring(16,17));
+            	
+            	System.out.println(updateId);
+            	System.out.println(updateCode);
+            	
+            	Session session = HibernateUtil.getSessionFactory().openSession();
+        	    Transaction tx = null;
+        	    try{
+        	    	tx = session.beginTransaction();
+        	    	String sql = "";
+        	    	if(updateCode==0){
+        	    		sql = "UPDATE TRANSACTIONS SET STATUS='Failed' WHERE ID="+updateId+";";
+        	    	}
+        	    	else{
+        	    		sql = "UPDATE TRANSACTIONS SET STATUS='Successful' WHERE ID="+updateId+";";
+        	    	}
+        	        /*SQLQuery query = */
+        	        session.createSQLQuery(sql)
+        	        	.executeUpdate();
+        	        //query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+        	        
+        	        tx.commit();
+        	    }catch (HibernateException e) {
+        	        if (tx!=null) tx.rollback();
+        	        e.printStackTrace(); 
+        	    }finally {
+        	        session.close(); 
+        	    }
+            }
+
+            bufferedReader.close();  
+            
+            File fileDelete = new File("receipt.txt");
+            fileDelete.delete();
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println(
+                "Unable to open file '" + 
+                fileName + "'");                
+        }
+        catch(IOException ex) {
+            System.out.println(
+                "Error reading file '" 
+                + fileName + "'");                  
+            // Or we could just do this: 
+            // ex.printStackTrace();
+        }
+	    
+    	return getTransactionHistory(id);
+    }
+    
+    @POST
     @Path("/accountinfo")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -136,9 +212,10 @@ public class DatabaseController {
 	    }finally {
 	        session.close(); 
 	    }
-    	/*String fileOutput = null;
+    	String fileOutput = null;
     	String account = form.getAccount();
-    	String amount = String.format ("%d", form.getAmount()*100);
+    	String amount = (form.getAmount()*100) + "";
+    	String id = form.getId() + "";
     	
     	int length = 17-account.length();
     	for(int i=0;i<length;i++){
@@ -147,6 +224,10 @@ public class DatabaseController {
     	length = 10-amount.length();
     	for(int i=0;i<length;i++){
     		amount = "_" + amount;
+    	}
+    	length = 15-id.length();
+    	for(int i=0;i<length;i++){
+    		id = "0" + id;
     	}
     	
     	fileOutput = 
@@ -160,38 +241,36 @@ public class DatabaseController {
     	+ "___________" + "___________"	//Name, last, first, left justify
     	+ "__"							//Discretionary Data
     	+ "_"							//Addenda Record Indicator
-    	+ "_______________"				//Trace Number
+    	+ id							//Trace Number
     	;
     	
     	PrintWriter writer = new PrintWriter("output.txt", "UTF-8");	//open writer
     	writer.println(fileOutput);										//write to file
-    	writer.close();	*/											//close writer
+    	writer.close();											//close writer
     	
     	//System.out.println(form.getAccount());
     	return true;
     }
 
     @POST
-    @Path("/newtran")
+    @Path("/adduser")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public boolean addUser(User u) throws FileNotFoundException, UnsupportedEncodingException {
-    {
-	Session session = HibernateUtil.getSessionFactory().openSession();
-	    Transaction tx = null;
-	    try{
-	        tx = session.beginTransaction();
-	        String sql = "INSERT INTO user(USERNAME, PASSWORD, SSN) VALUES ('" + u.getUsername() + "', crypt('" + u.getPassword() + "', gen_salt('md5')), '" + u.getSsn() + "');";
-		session.createSQLQuery(sql)
-		    .executeUpdate();
-		tx.commit();
-	    }catch (HibernateException e) {
-	        if (tx!=null) tx.rollback();
-	        e.printStackTrace(); 
-	    }finally {
-	        session.close();
-	    	}
-	return true;
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		    Transaction tx = null;
+		    try{
+		        tx = session.beginTransaction();
+		        String sql = "INSERT INTO user(USERNAME, PASSWORD, SSN) VALUES ('" + u.getUsername() + "', crypt('" + u.getPassword() + "', gen_salt('md5')), '" + u.getSsn() + "');";
+			session.createSQLQuery(sql)
+			    .executeUpdate();
+			tx.commit();
+		    }catch (HibernateException e) {
+		        if (tx!=null) tx.rollback();
+		        e.printStackTrace(); 
+		    }finally {
+		        session.close();
+		    	}
+		return true;
     }
-	
 }

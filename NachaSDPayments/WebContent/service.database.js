@@ -17,6 +17,10 @@ app.service('DatabaseService', ['$http', '$location', function ($http, $location
 	    return $http.post(baseUrl + "api/data/history", id);
 	};
 	
+	this.updatePending = function(id){
+	    return $http.post(baseUrl + "api/data/pending", id);
+	};
+	
 	this.getAccounts = function(id){
 		return $http.post(baseUrl + "api/data/accountinfo", id);
 	};
