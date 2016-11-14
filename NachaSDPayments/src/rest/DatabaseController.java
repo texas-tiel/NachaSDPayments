@@ -177,6 +177,14 @@ public class DatabaseController {
 
 	        accounts = query.list();
 	        
+	        String a = "";
+	        for(int i = 0; i < accounts.size(); i++){
+	        	a = accounts.get(i).getAccount();
+	        	for(int j = 0; j < a.length()-4; j++)
+	        		a = a.substring(0,j) + "X" + a.substring(j+1, a.length());
+	        	accounts.get(i).setAccount(a);
+	        }
+	        
 	        tx.commit();
 	    }catch (HibernateException e) {
 	        if (tx!=null) tx.rollback();

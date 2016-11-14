@@ -43,7 +43,8 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	$scope.validateForm = function(){
 		$scope.transInfo.id = UserService.getUserId();
 		DatabaseService.sendForm($scope.transInfo).success(function(result){
-			toastr.success('Transaction successful');
+			var confirmationNum = Math.floor(Math.random()*200000)+100000;// + Math.random().toFixed(2);
+			toastr.success('Transaction successful. Confirmation #: ' + confirmationNum);
 			$location.path('/home');
 		}).error(function(){
 			toastr.error('Transaction failed');
