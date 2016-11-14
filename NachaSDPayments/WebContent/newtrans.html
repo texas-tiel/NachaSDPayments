@@ -22,7 +22,7 @@
 			<i class="fa fa-university inputIcon" aria-hidden="true"></i>
 			<select class="customTextbox" ng-model="transInfo.account" required>
 				<option value="" disabled selected hidden>Account</option>
-				<option ng-repeat="a in accounts" value="{{a.account}}">{{a.account}} | {{a.bankname}}</option>
+				<option ng-repeat="a in accounts" value="{{$index}}">{{a.account}} | {{a.bankname}}</option>
 			</select>
 		</div>
 		<div class="inputContainer" style="width:250px">

@@ -5,6 +5,7 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	var redirect = checkUser();
 	var today = getCurrDate();
 	$scope.paymentType = 0;
+	var masterList = [];
 	$scope.accounts = [];
 	
 	$scope.transInfo = {
@@ -18,7 +19,14 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 			$location.path('/');
 		else
 			DatabaseService.getAccounts(UserService.getUserId()).success(function(result){
+				masterList = JSON.parse(JSON.stringify(result));
 				$scope.accounts = result;
+				for(var i = 0; i < result.length; i++){
+					var temp = $scope.accounts[i].account;
+					for(var j = 0; j < temp.length-4; j++)
+						temp = temp.substring(0,j) + "x" + temp.substring(j+1, temp.length);
+					$scope.accounts[i].account = temp;
+				}
 			});
 	};
 	
@@ -42,6 +50,7 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 	//Called when the "submit" button is pressed
 	$scope.validateForm = function(){
 		$scope.transInfo.id = UserService.getUserId();
+		$scope.transInfo.account = masterList[$scope.transInfo.account].account; 
 		DatabaseService.sendForm($scope.transInfo).success(function(result){
 			var confirmationNum = Math.floor(Math.random()*200000)+100000;// + Math.random().toFixed(2);
 			toastr.success('Transaction successful. Confirmation #: ' + confirmationNum);

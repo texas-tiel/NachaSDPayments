@@ -77,6 +77,14 @@ public class DatabaseController {
 
 	        history = query.list();
 	        
+	        String account; 
+	        for(int i = 0; i < history.size(); i++){
+	        	account = history.get(i).getAccount();
+	        	for(int j = 0; j < account.length()-4; j++)
+	        		account = account.substring(0, j) + "x" + account.substring(j+1, account.length());
+	        	history.get(i).setAccount(account);
+	        }
+	        
 	        tx.commit();
 	    }catch (HibernateException e) {
 	        if (tx!=null) tx.rollback();
@@ -177,14 +185,6 @@ public class DatabaseController {
 
 	        accounts = query.list();
 	        
-	        String a = "";
-	        for(int i = 0; i < accounts.size(); i++){
-	        	a = accounts.get(i).getAccount();
-	        	for(int j = 0; j < a.length()-4; j++)
-	        		a = a.substring(0,j) + "X" + a.substring(j+1, a.length());
-	        	accounts.get(i).setAccount(a);
-	        }
-	        
 	        tx.commit();
 	    }catch (HibernateException e) {
 	        if (tx!=null) tx.rollback();
@@ -205,6 +205,8 @@ public class DatabaseController {
     	
     	Session session = HibernateUtil.getSessionFactory().openSession();
 	    Transaction tx = null;
+	    List<Transactions> trans = new ArrayList<Transactions>();
+	    String id = "";
 	    try{
 	    	tx = session.beginTransaction();
 	        String sql = "INSERT INTO TRANSACTIONS (DATE,AMOUNT,STATUS, ACCOUNT) VALUES ('"+ form.getDate() +"', "+form.getAmount()+", 'Pending', '"+form.getAccount()+"');";
@@ -212,6 +214,16 @@ public class DatabaseController {
 	        session.createSQLQuery(sql)
 	        	.executeUpdate();
 	        //query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+	        
+	        tx.commit();
+	        
+	        tx = session.beginTransaction();
+	        sql = "SELECT t.id FROM Transactions t WHERE t.amount = " + form.getAmount() + " AND t.date ='" + form.getDate() + "' AND t.account = '" + form.getAccount() + "' AND t.status = 'Pending';";
+	        SQLQuery query = session.createSQLQuery(sql);
+	        query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+
+	        trans = query.list();
+	        id = trans.get(0).getId() + "";
 	        
 	        tx.commit();
 	    }catch (HibernateException e) {
@@ -222,8 +234,8 @@ public class DatabaseController {
 	    }
     	String fileOutput = null;
     	String account = form.getAccount();
-    	String amount = (form.getAmount()*100) + "";
-    	String id = form.getId() + "";
+    	String amount = (int)(form.getAmount()*100) + "";
+    	//String id = form.getId() + "";
     	
     	int length = 17-account.length();
     	for(int i=0;i<length;i++){
