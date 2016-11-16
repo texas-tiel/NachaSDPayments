@@ -103,7 +103,7 @@ public class DatabaseController {
     public List<Transactions> updatePending(int id) {
     	
     	//CODE GOES HERE
-    	String fileName = "receipt.txt";
+    	String fileName = "receipt";
     	
     	String fileInput = null;
 	    
@@ -149,7 +149,7 @@ public class DatabaseController {
 
             bufferedReader.close();  
             
-            File fileDelete = new File("receipt.txt");
+            File fileDelete = new File("receipt");
             fileDelete.delete();
         }
         catch(FileNotFoundException ex) {
@@ -264,7 +264,7 @@ public class DatabaseController {
     	+ id							//Trace Number
     	;
     	
-    	PrintWriter writer = new PrintWriter("output.txt", "UTF-8");	//open writer
+    	PrintWriter writer = new PrintWriter("output", "UTF-8");	//open writer
     	writer.println(fileOutput);										//write to file
     	writer.close();											//close writer
     	
