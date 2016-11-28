@@ -13,5 +13,6 @@
   <mapping class="hibernate.Account" package="hibernate" resource="rest/Account.hbm.xml"/>
   <mapping class="hibernate.Bank" package="hibernate" resource="rest/Bank.hbm.xml"/>
   <mapping class="hibernate.BankAccountDTO" package="hibernate" resource="rest/BankAccountDTO.hbm.xml"/>
+  <mapping class="hibernate.DelayedPayment" package="hibernate" resource="rest/DelayedPayment.hbm.xml"/> 
  </session-factory>
 </hibernate-configuration>
