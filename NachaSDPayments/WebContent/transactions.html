@@ -32,11 +32,13 @@
 		<div class="large bold">Pending Transactions</div>
 		<br>
 		<div ng-show="hasElements(pendingTrans)">
+			<div class="gridCell bold">Trans Number</div>
 			<div class="gridCell bold">Account Number</div>
 			<div class="gridCell bold">Date</div>
 			<div class="gridCell bold">Amount</div>
 			<div class="gridCell bold">Status</div>
-			<div ng-repeat="t in pendingTrans" ng-class-odd="'grayBackground'" style="width:900px">
+			<div ng-repeat="t in pendingTrans" ng-class-odd="'grayBackground'" style="width:1100px">
+				<div class="gridCell">{{t.id}}</div>
 				<div class="gridCell">{{t.account}}</div>
 				<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div>
 				<div class="gridCell">{{t.amount | currency:"$"}}</div>
@@ -53,11 +55,13 @@
 		<div class="large bold">Completed Transactions</div>
 		<br>
 		<div ng-show="hasElements(completedTrans)">
+			<div class="gridCell bold">Trans Number</div>
 			<div class="gridCell bold">Account Number</div>
 			<div class="gridCell bold">Date</div>
 			<div class="gridCell bold">Amount</div>
 			<div class="gridCell bold">Status</div>
-			<div ng-repeat="t in completedTrans" ng-class-odd="'grayBackground'" style="width:900px">
+			<div ng-repeat="t in completedTrans" ng-class-odd="'grayBackground'" style="width:1100px">
+				<div class="gridCell">{{t.id}}</div>
 				<div class="gridCell">{{t.account}}</div>
 				<div class="gridCell">{{t.date | date:"MM/dd/yyyy"}}</div>
 				<div class="gridCell">{{t.amount | currency:"$"}}</div>

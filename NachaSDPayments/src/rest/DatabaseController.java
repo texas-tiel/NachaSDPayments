@@ -100,12 +100,11 @@ public class DatabaseController {
     @Path("/pending")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Transactions> updatePending(int id) {
+    public UpdateDTO updatePending(int id) {
     	
-    	//CODE GOES HERE
     	String fileName = "receipt";
-    	
     	String fileInput = null;
+    	String message = "";
 	    
     	try {
             // FileReader reads text files in the default encoding.
@@ -129,14 +128,14 @@ public class DatabaseController {
         	    	String sql = "";
         	    	if(updateCode==0){
         	    		sql = "UPDATE TRANSACTIONS SET STATUS='Failed' WHERE ID="+updateId+";";
+        	    		message = "Transaction " + updateId + " returned as failed.";
         	    	}
         	    	else{
         	    		sql = "UPDATE TRANSACTIONS SET STATUS='Successful' WHERE ID="+updateId+";";
+        	    		message = "Transaction " + updateId + " returned as successful.";
         	    	}
         	        /*SQLQuery query = */
-        	        session.createSQLQuery(sql)
-        	        	.executeUpdate();
-        	        //query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
+        	        session.createSQLQuery(sql).executeUpdate();
         	        
         	        tx.commit();
         	    }catch (HibernateException e) {
@@ -155,17 +154,18 @@ public class DatabaseController {
         catch(FileNotFoundException ex) {
             System.out.println(
                 "Unable to open file '" + 
-                fileName + "'");                
+                fileName + "'"); 
         }
         catch(IOException ex) {
             System.out.println(
                 "Error reading file '" 
-                + fileName + "'");                  
+                + fileName + "'");
             // Or we could just do this: 
             // ex.printStackTrace();
         }
-	    
-    	return getTransactionHistory(id);
+    	
+    	List<Transactions> trans = getTransactionHistory(id); 
+    	return new UpdateDTO(message, trans);
     }
     
     @POST

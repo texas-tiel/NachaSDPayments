@@ -30,14 +30,21 @@ app.controller('HomeCtrl', ['$scope', '$location', '$interval', 'DatabaseService
 		
 		//AJAX call
 		DatabaseService.updatePending(UserService.getUserId()).success(function(result){
-			sortTransactions(result);
+			if(result.message != ""){
+				if(result.message.indexOf("success") != -1)
+					toastr.success(result.message);
+				else
+					toastr.warning(result.message);
+			}
+			
+			sortTransactions(result.trans);
 			$scope.loading = false;
 		}).error(function(){
 			$scope.databaseFailure = true;
 		});
 	};
 	
-	$interval(fetchUserData, 300000);
+	$interval(fetchUserData, 60000); //reloads every minute
 	
 	//Sorts the passed list of transactions into 'pending' and 'success/fail' lists
 	function sortTransactions(list){
