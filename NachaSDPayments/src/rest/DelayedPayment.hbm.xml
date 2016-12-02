@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 27, 2016 7:21:09 PM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="rest.DelayedPayment" table="delayed_payment">
+        <id name="accountNum" type="java.lang.String">
+            <column name="account_num" />
+            <generator class="assigned" />
+        </id>
+        <property name="paymentDate" type="java.sql.Date">
+            <column name="payment_date" />
+        </property>
+        <property name="delayedPaymentAmount" type="java.lang.Double">
+            <column name="delayed_payment_amount" />
+        </property>
+        <property name="numOfPayments" type="int">
+            <column name="num_of_payments" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -17,5 +17,23 @@
         <property name="ssn" type="string">
             <column name="ssn" length="9" />
         </property>
+        <property name="zipcode" type="string">
+            <column name="zipcode" length="5" />
+        </property>   
+        <property name="dateofbirth" type="java.sql.Date">
+            <column name="dateofbirth" length="50" />
+        </property> 
+         <property name="firstname" type="string">
+            <column name="first_name" length="50" />
+        </property> 
+         <property name="lastname" type="string">
+            <column name="last_name" length="50" />
+        </property> 
+        <property name="salary" type="java.lang.Double">
+            <column name="salary" precision="17" scale="17" />
+        </property>
+        <property name="creditscore" type="int">
+            <column name="credit_score"  />
+        </property>
     </class>
 </hibernate-mapping>

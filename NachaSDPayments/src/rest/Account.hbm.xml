@@ -17,5 +17,11 @@
         <property name="accountNum" type="string">
             <column name="account_num" length="17" />
         </property>
+         <property name="paymentDueAmount" type="java.lang.Double">
+            <column name="salary" precision="17" scale="17" />
+        </property>
+         <property name="paymentDueDate" type="java.sql.Date">
+            <column name="dateofbirth" length="50" />
+        </property>
     </class>
 </hibernate-mapping>

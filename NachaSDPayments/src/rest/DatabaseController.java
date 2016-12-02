@@ -292,5 +292,33 @@ public class DatabaseController {
 		        session.close();
 		    	}
 		return true;
+    } 
+    
+    
+    /***NOT SURE IF U WANT TO ADD THE HTML ENCODING HERE, if needed for the UI INTEGRATION. ***********
+     * 
+     * logic : 
+     * salary is 2x the minimum delay payment amount
+     * credit score > 600
+     * date of birth an zip is valid 
+     * the number of delayed payments is less than 2
+     * 
+     */
+    public boolean isUserEligibleForSameDayPayments(User u, DelayedPayment v) throws FileNotFoundException, UnsupportedEncodingException {
+  
+    	String tempZip = u.getZipcode();
+    	Date tempDOB = u .getDateofbirth();
+    	Double tempSalary = u.getSalary();
+    	int tempCreditScore = u.getCreditscore();
+    	int tempNumOFDelayedPayments = v.getNumOfPayments();
+    	Double tempDelayedPaymentAmount = v.getDelayedPaymentAmount();
+    	
+    	//logic
+    	if(tempSalary >= 2*tempDelayedPaymentAmount && tempCreditScore >= 600 && tempZip != null && tempDOB !=null && tempNumOFDelayedPayments <= 2)
+    	{
+    		return true;
+    	}
+    	else{return false;}
     }
+    
 }
