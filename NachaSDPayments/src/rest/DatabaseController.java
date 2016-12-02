@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -297,28 +298,55 @@ public class DatabaseController {
     
     /***NOT SURE IF U WANT TO ADD THE HTML ENCODING HERE, if needed for the UI INTEGRATION. ***********
      * 
-     * logic : 
-     * salary is 2x the minimum delay payment amount
-     * credit score > 600
-     * date of birth an zip is valid 
-     * the number of delayed payments is less than 2
-     * 
      */
-    public boolean isUserEligibleForSameDayPayments(User u, DelayedPayment v) throws FileNotFoundException, UnsupportedEncodingException {
-  
-    	String tempZip = u.getZipcode();
-    	Date tempDOB = u .getDateofbirth();
-    	Double tempSalary = u.getSalary();
-    	int tempCreditScore = u.getCreditscore();
-    	int tempNumOFDelayedPayments = v.getNumOfPayments();
-    	Double tempDelayedPaymentAmount = v.getDelayedPaymentAmount();
-    	
-    	//logic
-    	if(tempSalary >= 2*tempDelayedPaymentAmount && tempCreditScore >= 600 && tempZip != null && tempDOB !=null && tempNumOFDelayedPayments <= 2)
-    	{
-    		return true;
-    	}
-    	else{return false;}
+    public boolean IsUserEligibeForSameDayNACHA(User u, DelayedPayment d)
+    {
+    	Date dateOfBirth = u.getDateofbirth();
+    	@SuppressWarnings("deprecation")
+		int dob = dateOfBirth.getYear();
+		Double salary = u.getSalary();
+		int creditScore = u.getCreditscore();
+		int delayPayment = d.getNumOfPayments();
+
+         
+        int age = Calendar.getInstance().get(Calendar.YEAR) - dob;
+
+        if (age<25){
+
+            if (creditScore>770){
+                return false;
+            }else {
+                if (salary>50000){
+                    return false;
+                }else {
+                    if (delayPayment<5){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+            }
+        }else{
+            if (age<55) {
+                if (salary > 80000) {
+                    return false;
+                } else {
+                    if (delayPayment>7){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                if (creditScore>700){
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+
+        }
     }
-    
+  
 }
