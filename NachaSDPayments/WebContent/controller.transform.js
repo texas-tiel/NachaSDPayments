@@ -53,7 +53,11 @@ app.controller('TransFormCtrl', ['$scope', '$location', 'DatabaseService', 'User
 		$scope.transInfo.account = masterList[$scope.transInfo.account].account; 
 		DatabaseService.sendForm($scope.transInfo).success(function(result){
 			var confirmationNum = Math.floor(Math.random()*200000)+100000;// + Math.random().toFixed(2);
+			
 			toastr.success('Transaction successful. Confirmation #: ' + confirmationNum);
+			if(result == true)
+				toastr.success('Your transaction will be processed using NACHA same day payment.');
+			
 			$location.path('/home');
 		}).error(function(){
 			toastr.error('Transaction failed');

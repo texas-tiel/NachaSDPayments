@@ -268,6 +268,7 @@ public class DatabaseController {
 	    }finally {
 	        session.close(); 
 	    }
+	    
     	String fileOutput = null;
     	String account = form.getAccount();
     	String amount = (int)(form.getAmount()*100) + "";
@@ -303,12 +304,10 @@ public class DatabaseController {
     	PrintWriter writer = new PrintWriter("output", "UTF-8");	//open writer
     	writer.println(fileOutput);										//write to file
     	writer.close();											//close writer
-    	
-    	// nacha
    
     	boolean eligibility = IsUserEligibeForSameDayNACHA(tempUser, tempDP);
     	//System.out.println(form.getAccount());
-    	return true;
+    	return eligibility;
     }
 
     @POST
