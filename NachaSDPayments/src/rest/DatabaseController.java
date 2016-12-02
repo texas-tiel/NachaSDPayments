@@ -207,7 +207,12 @@ public class DatabaseController {
     	Session session = HibernateUtil.getSessionFactory().openSession();
 	    Transaction tx = null;
 	    List<Transactions> trans = new ArrayList<Transactions>();
+	    List<Account> accounts = new ArrayList<Account>();
+	    List<User> users = new ArrayList<User>();
+	    List<DelayedPayment> dp = new ArrayList<DelayedPayment>();
 	    String id = "";
+	    User tempUser = null;
+	    DelayedPayment tempDP = null;
 	    try{
 	    	tx = session.beginTransaction();
 	        String sql = "INSERT INTO TRANSACTIONS (DATE,AMOUNT,STATUS, ACCOUNT) VALUES ('"+ form.getDate() +"', "+form.getAmount()+", 'Pending', '"+form.getAccount()+"');";
@@ -225,8 +230,38 @@ public class DatabaseController {
 
 	        trans = query.list();
 	        id = trans.get(0).getId() + "";
-	        
 	        tx.commit();
+	        
+	        //eligibility - account search
+	        tx = session.beginTransaction();
+	        sql ="SELECT a.user_id FROM Account WHERE a.account_num = " + form.getAccount() + ";";
+	        SQLQuery query1 = session.createSQLQuery(sql);
+	        query1.setResultTransformer(Transformers.aliasToBean(Account.class));
+	        
+	        accounts = query1.list();
+	        int userid = accounts.get(0).getUserId();
+	        tx.commit();
+	        
+	        //eligibility - user search
+	        tx = session.beginTransaction();
+	        sql = "SELECT * FROM d.user WHERE d.account_id = " + userid + ";";
+	        SQLQuery query2 = session.createSQLQuery(sql);
+	        query2.setResultTransformer(Transformers.aliasToBean(User.class));
+	        
+	        users = query2.list();
+	        tempUser = users.get(0);
+	        tx.commit();
+	        
+	        //eligibility - delayed payment search
+	        tx = session.beginTransaction();	
+	        sql = "SELECT * FROM f.delayed_payment WHERE f.account_num = " + form.getAccount() + ";";
+	        SQLQuery query3 = session.createSQLQuery(sql);
+	        query3.setResultTransformer(Transformers.aliasToBean(User.class));
+	        
+	        dp = query3.list();
+	        tempDP = dp.get(0);
+	        tx.commit();
+	        
 	    }catch (HibernateException e) {
 	        if (tx!=null) tx.rollback();
 	        e.printStackTrace(); 
@@ -269,6 +304,9 @@ public class DatabaseController {
     	writer.println(fileOutput);										//write to file
     	writer.close();											//close writer
     	
+    	// nacha
+   
+    	boolean eligibility = IsUserEligibeForSameDayNACHA(tempUser, tempDP);
     	//System.out.println(form.getAccount());
     	return true;
     }

@@ -18,6 +18,7 @@ public class Transactions implements java.io.Serializable {
 	private String status;
 	
 	
+	
 	public int getId() { return this.id; }
 	public void setId(int id) { this.id = id; }
 	
@@ -32,4 +33,6 @@ public class Transactions implements java.io.Serializable {
 	
 	public String getStatus(){ return this.status; }
 	public void setStatus(String status){ this.status = status; }
+	
+	
 }
