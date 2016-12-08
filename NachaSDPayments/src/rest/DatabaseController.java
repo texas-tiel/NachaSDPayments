@@ -29,6 +29,12 @@ import org.hibernate.transform.Transformers;
 @Path("/data") //specifies the routing information for the HTTP calls to this class
 public class DatabaseController {
 	
+	int dp = 0;
+	boolean eligibility = false;
+	int age = 100;
+	Double salary = 0.0;
+	int creditScore = 0;	
+	
 	@POST
     @Path("/user")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -197,7 +203,8 @@ public class DatabaseController {
     	return accounts;
     }
     
-    @POST //specifies which type of HTTP call the method accepts (get, post, put, delete)
+    @SuppressWarnings("deprecation")
+	@POST //specifies which type of HTTP call the method accepts (get, post, put, delete)
     @Path("/newtran") //declares the routing information for the HTTP call to this method
     @Consumes(MediaType.APPLICATION_JSON) //declares the format of the data it receives as a parameter
     @Produces(MediaType.APPLICATION_JSON) //declares the format of the returned data, in this case a JSON Object
@@ -207,9 +214,8 @@ public class DatabaseController {
     	Session session = HibernateUtil.getSessionFactory().openSession();
 	    Transaction tx = null;
 	    List<Transactions> trans = new ArrayList<Transactions>();
-	    List<Account> accounts = new ArrayList<Account>();
-	    List<User> users = new ArrayList<User>();
-	    List<DelayedPayment> dp = new ArrayList<DelayedPayment>();
+	    List<User> usrs = new ArrayList<User>();
+	    List<DelayedPayment> delayp = new ArrayList<DelayedPayment>();
 	    String id = "";
 	    User tempUser = null;
 	    DelayedPayment tempDP = null;
@@ -222,7 +228,7 @@ public class DatabaseController {
 	        //query.setResultTransformer(Transformers.aliasToBean(Transactions.class));
 	        
 	        tx.commit();
-	        
+	       
 	        tx = session.beginTransaction();
 	        sql = "SELECT t.id FROM Transactions t WHERE t.amount = " + form.getAmount() + " AND t.date ='" + form.getDate() + "' AND t.account = '" + form.getAccount() + "' AND t.status = 'Pending';";
 	        SQLQuery query = session.createSQLQuery(sql);
@@ -232,35 +238,29 @@ public class DatabaseController {
 	        id = trans.get(0).getId() + "";
 	        tx.commit();
 	        
-	        //eligibility - account search
+	        // THIS IS USED FOR NACHA PROCESSING - TO IDENTIFY WHICH USER BASED ON ACCOUNTN NUM
 	        tx = session.beginTransaction();
-	        sql ="SELECT a.user_id FROM Account WHERE a.account_num = " + form.getAccount() + ";";
+	    	sql ="SELECT * FROM public.User WHERE account_id = (SELECT user_id FROM public.Account WHERE account_num = '" + form.getAccount()+ "');";
+	    	
 	        SQLQuery query1 = session.createSQLQuery(sql);
-	        query1.setResultTransformer(Transformers.aliasToBean(Account.class));
-	        
-	        accounts = query1.list();
-	        int userid = accounts.get(0).getUserId();
+	   
+	       // query1.setResultTransformer(Transformers.aliasToBean(User.class));
+	        query1.addEntity(User.class);
+	        usrs = query1.list();
+
 	        tx.commit();
-	        
-	        //eligibility - user search
-	        tx = session.beginTransaction();
-	        sql = "SELECT * FROM d.user WHERE d.account_id = " + userid + ";";
+	     
+	        // THIS IS USED TO MATCH ACCOUNT NUM + GET DELAYED PAYMENT INFO
+	    	tx = session.beginTransaction();
+	   	    sql ="SELECT * FROM public.Delayed_Payment WHERE account_num = '"+ form.getAccount()+"';";
 	        SQLQuery query2 = session.createSQLQuery(sql);
-	        query2.setResultTransformer(Transformers.aliasToBean(User.class));
+	        query2.addEntity(DelayedPayment.class);
 	        
-	        users = query2.list();
-	        tempUser = users.get(0);
+	        
+	        delayp = query2.list();
+	    	
 	        tx.commit();
 	        
-	        //eligibility - delayed payment search
-	        tx = session.beginTransaction();	
-	        sql = "SELECT * FROM f.delayed_payment WHERE f.account_num = " + form.getAccount() + ";";
-	        SQLQuery query3 = session.createSQLQuery(sql);
-	        query3.setResultTransformer(Transformers.aliasToBean(User.class));
-	        
-	        dp = query3.list();
-	        tempDP = dp.get(0);
-	        tx.commit();
 	        
 	    }catch (HibernateException e) {
 	        if (tx!=null) tx.rollback();
@@ -304,9 +304,22 @@ public class DatabaseController {
     	PrintWriter writer = new PrintWriter("output", "UTF-8");	//open writer
     	writer.println(fileOutput);										//write to file
     	writer.close();											//close writer
-   
-    	boolean eligibility = IsUserEligibeForSameDayNACHA(tempUser, tempDP);
-    	//System.out.println(form.getAccount());
+ 
+	      
+        creditScore = usrs.get(0).getCreditscore();
+        Date temp = usrs.get(0).getDateofbirth();
+        age = Calendar.getInstance().get(Calendar.YEAR) - temp.getYear() - 1900;
+    	salary = usrs.get(0).getSalary();
+        dp = delayp.get(0).getNumOfPayments();
+        
+        //test
+        System.out.println("Credit Score used: " + creditScore);
+        System.out.println("AGE used: " +age);
+        System.out.println("SALARY used: " +salary);
+        System.out.println("DELAY USED  used: " +dp);
+        
+        
+        eligibility = IsUserEligibeForSameDayNACHA(age, salary, creditScore, dp);
     	return eligibility;
     }
 
@@ -333,21 +346,23 @@ public class DatabaseController {
     } 
     
     
-    /***NOT SURE IF U WANT TO ADD THE HTML ENCODING HERE, if needed for the UI INTEGRATION. ***********
+    /***
      * 
      */
-    public boolean IsUserEligibeForSameDayNACHA(User u, DelayedPayment d)
-    {
-    	Date dateOfBirth = u.getDateofbirth();
-    	@SuppressWarnings("deprecation")
-		int dob = dateOfBirth.getYear();
-		Double salary = u.getSalary();
-		int creditScore = u.getCreditscore();
-		int delayPayment = d.getNumOfPayments();
-
-         
-        int age = Calendar.getInstance().get(Calendar.YEAR) - dob;
-
+   public boolean IsUserEligibeForSameDayNACHA(int age,Double salary, int creditScore, int delayed){
+    	
+    	//test logic for small # of users
+    	if(age<30)
+    	{
+    		return false;
+    	}
+    	else
+    	{
+    		return true;
+    	}
+    	
+    	//Mahdi Logic if more users are added
+       /*
         if (age<25){
 
             if (creditScore>770){
@@ -356,7 +371,7 @@ public class DatabaseController {
                 if (salary>50000){
                     return false;
                 }else {
-                    if (delayPayment<5){
+                    if (delayed<5){
                         return false;
                     }else{
                         return true;
@@ -368,7 +383,7 @@ public class DatabaseController {
                 if (salary > 80000) {
                     return false;
                 } else {
-                    if (delayPayment>7){
+                    if (delayed>7){
                         return true;
                     } else {
                         return false;
@@ -384,6 +399,8 @@ public class DatabaseController {
             }
 
         }
+*/
+
     }
   
 }

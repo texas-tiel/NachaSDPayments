@@ -13,13 +13,13 @@ public class Account implements java.io.Serializable {
 	
 	public int getId() { return id; }
 	public void setId(int i) { id = i; }
-	
-	public int getUserId() { return userId; }
-	public void setUserId(int i) { userId = i; }
-	
-	public int getBankNum(){ return bankNum; }
-	public void setBankNum(int b){ bankNum = b; }
 
+	public int getBankNum() {return bankNum;}
+	public void setBankNum(int bn) {bankNum = bn;}
+	
+	public int getUserId() {return userId;}
+	public void setUserId(int id) {userId = id;}
+	
 	public String getAccountNum() { return accountNum; }
 	public void setAccountNum(String a) { accountNum = a; }
 	
